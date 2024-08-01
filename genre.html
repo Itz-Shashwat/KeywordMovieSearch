@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>OMDB Movie Search</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #title {
+      text-align: center;
+      color: #333;
+      margin-top: 30px;
+    }
+    
+    .input {
+      margin: auto;
+      width: 50%;
+      text-align: center;
+      padding: 10px;
+    }
+    
+    .input input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+    
+    .input button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .input button:hover {
+      background-color: #45a049;
+    }
+    
+    .movies-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    .movie {
+      background-color: #fff;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 200px;
+      text-align: center;
+    }
+    
+    .movie img {
+      width: 100px;
+      height: 150px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    
+    .movie p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">Check Movie using a word</h1>
+  <div class="input">
+    <input type="text" id="genreInput" placeholder="Enter genre">
+    <button onclick="searchMovies()">Search</button>
+  </div>
+
+  <div class="movies-container" id="moviesContainer"></div>
+
+  <script>
+    function searchMovies() {
+      var genre = document.getElementById('genreInput').value;
+      if (!genre) {
+        alert('Please enter a genre.');
+        return;
+      }
+
+      fetch(`http://127.0.0.1:5000/?genre=${genre}`)
+        .then(response => response.json())
+        .then(data => {
+          var moviesContainer = document.getElementById('moviesContainer');
+          moviesContainer.innerHTML = '';
+          data.forEach(movie => {
+            var movieDiv = document.createElement('div');
+            movieDiv.className = 'movie';
+            var img = document.createElement('img');
+            img.src = movie.Poster;
+            var title = document.createElement('p');
+            title.textContent = movie.Title;
+            movieDiv.appendChild(img);
+            movieDiv.appendChild(title);
+            moviesContainer.appendChild(movieDiv);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+  </script>
+</body>
+</html>
